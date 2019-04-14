@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - platform
+  - balloonstring
+  - MyPlayer
   layers:
   - Default
   - TransparentFX
@@ -13,8 +16,8 @@ TagManager:
   - UI
   - 
   - 
-  - far background
-  - player layer
+  - 
+  - 
   - 
   - 
   - 
@@ -38,12 +41,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: backgroundLayer
+    uniqueID: 1864303317
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: far away back
-    uniqueID: 1864303317
-    locked: 0
-  - name: player
+  - name: playerLayer
     uniqueID: 666463525
     locked: 0
