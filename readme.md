@@ -1,12 +1,14 @@
 # Balloon Game
 
 Balloon Game ported to Unity. 
-To see the interesting parts of this repo, check out
+
+The code can all be found in 
 [`Assets/Scripts`](https://github.com/fractalbach/balloon-unity/tree/master/Assets/scripts)
 
-Specifically check out the `PlayerControls` script, which has most
-of the interesting code in it:
-[`Assets/Scripts/PlayerControls.cs`](https://github.com/fractalbach/balloon-unity/blob/master/Assets/scripts/playerControls.cs)
+Specifically, check out 
+[`Assets/Scripts/PlayerControls.cs`](https://github.com/fractalbach/balloon-unity/blob/master/Assets/scripts/PlayerControls.cs),
+which currently has most of the interesting code.
+
 
 
 
