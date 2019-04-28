@@ -68,7 +68,7 @@ public class PlayerControls : MonoBehaviour
 	{
 		moveX = Input.GetAxis("Horizontal");
 		moveY = Input.GetAxis("Vertical");
-		requestJump = Input.GetKeyDown(KeyCode.Space);
+		requestJump = Input.GetButton("Jump");
 		requestJump |= (moveY > 0.1);
 	}
 
@@ -111,11 +111,14 @@ public class PlayerControls : MonoBehaviour
 	// forces that velocity to within the limit.
 	void ensureMaximumVelocity()
 	{
-		if (rb.velocity.magnitude <= maxSpeed) {
-			return;
-		}
-		float vx = rb.velocity.normalized.x * maxSpeed;
+		float vx = rb.velocity.x;
 		float vy = rb.velocity.y;
+		if (Mathf.Abs(vx) > maxSpeed) {
+			vx = Mathf.Sign(vx) * maxSpeed;
+		}
+		if (Mathf.Abs(vy) > maxSpeed) {
+			vy = Mathf.Sign(vy) * maxSpeed;
+		}
 		rb.velocity = new Vector2(vx, vy);
 	}
 	
