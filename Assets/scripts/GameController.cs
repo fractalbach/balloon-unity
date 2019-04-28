@@ -66,9 +66,10 @@ public class GameController : MonoBehaviour
 	void initBackground()
 	{
 		Vector3 pos = new Vector3(0f, FIRST_BACKGROUND_Y, 0f);
-		lowerBackground = Instantiate(background, pos, Quaternion.identity);
+		lowerBackground = make(background, pos);
 		pos[1] += backgroundHeight;
-		upperBackground = Instantiate(background, pos, Quaternion.identity);
+		upperBackground = make(background, pos);
+		debugBackground();
 	}
 
 	bool readyToMoveUpScreen()
@@ -76,7 +77,6 @@ public class GameController : MonoBehaviour
 		float playerY = getPos(player).y;
 		float backgroundY = getPos(upperBackground).y;
 		if (playerY > backgroundY) {
-			Debug.Log("Background is Ready to move up.");
 			return true;
 		}
 		return false;
@@ -84,19 +84,20 @@ public class GameController : MonoBehaviour
 
 	void moveUpScreen()
 	{
-		Destroy(lowerBackground);
+		Vector3 pos = getPos(upperBackground);
+		pos[1] += backgroundHeight;
+		lowerBackground.GetComponent<Transform>().position = pos;
+		GameObject temp = lowerBackground;
 		lowerBackground = upperBackground;
-		createUpperBackground();
+		upperBackground = temp;
+		debugBackground();
+	}
+
+	void debugBackground()
+	{
 		Vector3 upper = getPos(upperBackground);
 		Vector3 lower = getPos(lowerBackground);
 		Debug.Log("upperY = " + upper.y + ", lowerY = " + lower.y);
-	}
-
-	void createUpperBackground()
-	{
-		Vector3 pos = getPos(lowerBackground);
-		pos[1] += backgroundHeight;
-		upperBackground = Instantiate(background, pos, Quaternion.identity);
 	}
 
 
@@ -113,7 +114,7 @@ public class GameController : MonoBehaviour
 			y = Random.Range(-1f, 1f) + 2 * i;
 			z = 0f;
 			pos = new Vector3(x, y, z);
-			Instantiate(balloonPrefab, pos, Quaternion.identity);
+			make(balloonPrefab, pos);
 		}
 	}
 
@@ -125,5 +126,10 @@ public class GameController : MonoBehaviour
 	Vector3 getPos(GameObject obj)
 	{
 		return obj.GetComponent<Transform>().position;
+	}
+
+	GameObject make(GameObject original, Vector3 position)
+	{
+		return Instantiate(original, position, Quaternion.identity);
 	}
 }
