@@ -26,6 +26,8 @@ public class GameController : MonoBehaviour
 	private float backgroundHeight;
 	private float nextBackgroundY;
 
+	private float lowerCutoff = 0f;
+
 	
 	// =========================================================
 	// Events
@@ -56,6 +58,7 @@ public class GameController : MonoBehaviour
 		if (readyToMoveUpScreen()) {
 			moveUpScreen();
 		}
+		autoDeleteBalloonsBelow();
 	}
 
 
@@ -86,7 +89,7 @@ public class GameController : MonoBehaviour
 	{
 		Vector3 pos = getPos(upperBackground);
 		pos[1] += backgroundHeight;
-		lowerBackground.GetComponent<Transform>().position = pos;
+		setPos(lowerBackground, pos);
 		GameObject temp = lowerBackground;
 		lowerBackground = upperBackground;
 		upperBackground = temp;
@@ -120,12 +123,33 @@ public class GameController : MonoBehaviour
 
 	
 	// =========================================================
+	// Automatic Balloon Creation and Destruction
+	// ---------------------------------------------------------
+
+	void autoDeleteBalloonsBelow()
+	{
+		lowerCutoff = getPos(lowerBackground)[1] - backgroundHeight / 2;
+		GameObject[] gos = GameObject.FindGameObjectsWithTag("balloon");
+		foreach (GameObject go in gos) {
+			if (getPos(go)[1] < lowerCutoff) {
+				Destroy(go);
+			}
+		}
+	}
+	
+	
+	// =========================================================
 	// Functions to Make Clean Code
 	// ---------------------------------------------------------
 
-	Vector3 getPos(GameObject obj)
+	Vector3 getPos(GameObject go)
 	{
-		return obj.GetComponent<Transform>().position;
+		return go.GetComponent<Transform>().position;
+	}
+
+	void setPos(GameObject go, Vector3 position)
+	{
+		go.GetComponent<Transform>().position = position;
 	}
 
 	GameObject make(GameObject original, Vector3 position)
