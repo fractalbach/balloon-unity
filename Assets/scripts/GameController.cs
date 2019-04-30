@@ -28,6 +28,10 @@ public class GameController : MonoBehaviour
 
 	private float lowerCutoff = 0f;
 
+	private bool  youHaveLost = false;
+	private float youLoseCutoff = -10f;
+	
+
 	
 	// =========================================================
 	// Events
@@ -59,6 +63,13 @@ public class GameController : MonoBehaviour
 			moveUpScreen();
 		}
 		autoDeleteBalloonsBelow();
+	}
+
+	void LateUpdate()
+	{
+		if (playerHasFallenTooFar()) {
+			resetGame();
+		}
 	}
 
 
@@ -137,7 +148,59 @@ public class GameController : MonoBehaviour
 		}
 	}
 	
-	
+
+	// =========================================================
+	// Restarting Game From Falling
+	// ---------------------------------------------------------
+
+	// TODO:
+	// FIND A BETTER WAY TO RESTART THE GAME INSTANCE.
+	// Currently, it's hacky. Reseting the game by directly changing each
+	// variable is not-scalable as the game increases its complexity. Every
+	// new variable that is introduced will need to be added here, and it
+	// will SUCK and will create bugs later on.
+
+	bool playerHasFallenTooFar()
+	{
+		float low = lowerBackground.GetComponent<Renderer>().bounds.min.y;
+		float playerY = getPos(player).y;
+		if (playerY < low) {
+			return true;
+		}
+		return false;
+	}
+
+	void resetGame() 
+	{
+		Debug.Log("You have LOST! Resetting Game.");
+		resetPlayer();
+		resetBackground();
+		resetBalloons();
+	}
+
+	void resetPlayer()
+	{
+		Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+		rb.velocity = Vector3.zero;
+		setPos(player, Vector3.zero);
+	}
+
+	void resetBackground()
+	{
+		Vector3 pos = new Vector3(0f, FIRST_BACKGROUND_Y, 0f);
+		setPos(lowerBackground, pos);
+		pos[1] += backgroundHeight;
+		setPos(upperBackground, pos);
+	}
+
+	void resetBalloons()
+	{
+		GameObject[] gos = GameObject.FindGameObjectsWithTag("balloon");
+		foreach (GameObject go in gos) {
+			Destroy(go);
+		}
+	}
+
 	// =========================================================
 	// Functions to Make Clean Code
 	// ---------------------------------------------------------
