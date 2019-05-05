@@ -14,30 +14,36 @@ public class GameController : MonoBehaviour
 	public GameObject background;
 	public GameObject player;
 	public GameObject balloonPrefab;
+	public GameObject cutoffMarker;
 
-	private Transform playerTransform;
-	private Transform backgroundTransform;
-	private Renderer  backgroundRenderer;
-
-	private GameObject lowerBackground;
-	private GameObject upperBackground;
-
-	private const float FIRST_BACKGROUND_Y = 12f;
+	// Manage the moving backgrounds
+	private GameObject lowerBG;
+	private GameObject upperBG;
+	private const float FIRST_BACKGROUND_Y = -12f;
 	private float backgroundHeight;
 	private float nextBackgroundY;
 
-	private float lowerCutoff = 0f;
+	// Creation of new balloons.
+	private const float balloonSpacingY = 4f;
+	private const float newBalloonLowX = -7f;
+	private const float newBalloonHighX = 7f;
+	private float nextBallonY = 0f;
 
-	private bool  youHaveLost = false;
-	private float youLoseCutoff = -10f;
-	
+	// private bool  youHaveLost = false;
+	// private float youLoseCutoff = -10f;
 
-	
-	// =========================================================
-	// Events
-	// ---------------------------------------------------------
+	private float highestPlayerY = 0f;
+	private float cutoffSize     = 30f;
+	private float cutoff         = -10f;
 
-	void Awake()
+	private const float initialPlayerY = 2f;
+
+
+        // =========================================================
+        // Events
+        // ---------------------------------------------------------
+
+        void Awake()
 	{	
 		if (instance == null) {
 			instance = this;
@@ -49,27 +55,28 @@ public class GameController : MonoBehaviour
 
 	void Start()
 	{
-		playerTransform = player.GetComponent<Transform>();
-		backgroundTransform = background.GetComponent<Transform>();
-		backgroundRenderer = background.GetComponent<Renderer>();
-		backgroundHeight = backgroundRenderer.bounds.size[1];
-		createSomeBalloonsAtStart();
+		Renderer r = background.GetComponent<Renderer>();
+		backgroundHeight = r.bounds.size[1];
+		initBalloons();
 		initBackground();
-	}
-
-	void Update()
-	{
-		if (readyToMoveUpScreen()) {
-			moveUpScreen();
-		}
-		autoDeleteBalloonsBelow();
+		cutoffSize = backgroundHeight/2;
 	}
 
 	void LateUpdate()
 	{
 		if (playerHasFallenTooFar()) {
 			resetGame();
+			return;
 		}
+		if (readyToMoveUpScreen()) {
+			moveUpScreen();
+		}
+		if (readyToMakeNewBalloon()) {
+			makeNewBalloon();
+		}
+		updateHighestPlayerY();
+		updateCutoff();
+		autoDeleteBalloonsBelow();
 	}
 
 
@@ -80,69 +87,73 @@ public class GameController : MonoBehaviour
 	void initBackground()
 	{
 		Vector3 pos = new Vector3(0f, FIRST_BACKGROUND_Y, 0f);
-		lowerBackground = make(background, pos);
+		lowerBG = make(background, pos);
 		pos[1] += backgroundHeight;
-		upperBackground = make(background, pos);
+		upperBG = make(background, pos);
 		debugBackground();
 	}
 
-	bool readyToMoveUpScreen()
+        bool readyToMoveUpScreen()
 	{
-		float playerY = getPos(player).y;
-		float backgroundY = getPos(upperBackground).y;
-		if (playerY > backgroundY) {
-			return true;
-		}
-		return false;
+		return getPos(player).y > getPos(upperBG).y;
+		
 	}
 
-	void moveUpScreen()
+        void moveUpScreen()
 	{
-		Vector3 pos = getPos(upperBackground);
+		Vector3 pos = getPos(upperBG);
 		pos[1] += backgroundHeight;
-		setPos(lowerBackground, pos);
-		GameObject temp = lowerBackground;
-		lowerBackground = upperBackground;
-		upperBackground = temp;
+		setPos(lowerBG, pos);
+		GameObject temp = lowerBG;
+		lowerBG = upperBG;
+		upperBG = temp;
 		debugBackground();
 	}
 
 	void debugBackground()
 	{
-		Vector3 upper = getPos(upperBackground);
-		Vector3 lower = getPos(lowerBackground);
+		Vector3 upper = getPos(upperBG);
+		Vector3 lower = getPos(lowerBG);
 		Debug.Log("upperY = " + upper.y + ", lowerY = " + lower.y);
 	}
 
 
 	// =========================================================
-	// Create Some Balloons When the Game Starts
+	// Creating Balloons
 	// ---------------------------------------------------------
 
-	void createSomeBalloonsAtStart()
+	void initBalloons()
 	{
-		float x, y, z;
-		Vector3 pos;
-		for (int i = 0; i < 100; i++) {
-			x = Random.Range(-5f, 5f);
-			y = Random.Range(-1f, 1f) + 2 * i;
-			z = 0f;
-			pos = new Vector3(x, y, z);
-			make(balloonPrefab, pos);
+		nextBallonY = 0f;
+		for (int i = 0; i < 50; i++) {
+			makeNewBalloon();
 		}
 	}
 
+	bool readyToMakeNewBalloon()
+	{
+		return (getPos(player).y + 2 * backgroundHeight) > nextBallonY;
+	}
+
+	void makeNewBalloon()
+	{
+		float x = Random.Range(newBalloonLowX, newBalloonHighX);
+		float y = Random.Range(-0.5f, 0.5f) + nextBallonY;
+		make(balloonPrefab, new Vector3(x, y, 0f));
+		nextBallonY += balloonSpacingY;
+	}
 	
+
 	// =========================================================
 	// Automatic Balloon Creation and Destruction
 	// ---------------------------------------------------------
 
 	void autoDeleteBalloonsBelow()
 	{
-		lowerCutoff = getPos(lowerBackground)[1] - backgroundHeight / 2;
+		float lowY = cutoff;
 		GameObject[] gos = GameObject.FindGameObjectsWithTag("balloon");
 		foreach (GameObject go in gos) {
-			if (getPos(go)[1] < lowerCutoff) {
+			if (getPos(go)[1] < lowY) {
 				Destroy(go);
 			}
 		}
@@ -162,12 +173,7 @@ public class GameController : MonoBehaviour
 
 	bool playerHasFallenTooFar()
 	{
-		float low = lowerBackground.GetComponent<Renderer>().bounds.min.y;
-		float playerY = getPos(player).y;
-		if (playerY < low) {
-			return true;
-		}
-		return false;
+		return getPos(player).y < cutoff;
 	}
 
 	void resetGame() 
@@ -176,21 +182,23 @@ public class GameController : MonoBehaviour
 		resetPlayer();
 		resetBackground();
 		resetBalloons();
+		resetCutoff();
 	}
 
 	void resetPlayer()
 	{
 		Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
 		rb.velocity = Vector3.zero;
-		setPos(player, Vector3.zero);
+		rb.angularVelocity = 0f;
+		player.transform.position = new Vector3(0, initialPlayerY, 0);
 	}
 
 	void resetBackground()
 	{
 		Vector3 pos = new Vector3(0f, FIRST_BACKGROUND_Y, 0f);
-		setPos(lowerBackground, pos);
+		setPos(lowerBG, pos);
 		pos[1] += backgroundHeight;
-		setPos(upperBackground, pos);
+		setPos(upperBG, pos);
 	}
 
 	void resetBalloons()
@@ -199,7 +207,34 @@ public class GameController : MonoBehaviour
 		foreach (GameObject go in gos) {
 			Destroy(go);
 		}
+		initBalloons();
 	}
+
+	void resetCutoff()
+	{
+		highestPlayerY = 0f;
+		cutoff = -10f;
+		updateCutoff();
+	}
+
+	// =========================================================
+	// Cutoff Points
+	// ---------------------------------------------------------
+
+	void updateHighestPlayerY()
+	{
+		float playerY = getPos(player).y;
+		if (highestPlayerY < playerY) {
+			highestPlayerY = playerY;
+		}
+	}
+
+	void updateCutoff()
+	{
+		cutoff = highestPlayerY - cutoffSize;
+		setPosY(cutoffMarker, cutoff);
+	}
+
 
 	// =========================================================
 	// Functions to Make Clean Code
@@ -207,12 +242,24 @@ public class GameController : MonoBehaviour
 
 	Vector3 getPos(GameObject go)
 	{
-		return go.GetComponent<Transform>().position;
+		return go.transform.position;
 	}
 
 	void setPos(GameObject go, Vector3 position)
 	{
-		go.GetComponent<Transform>().position = position;
+		go.transform.position = position;
+	}
+
+	void setPosY(GameObject go, float y) {
+		Vector3 pos = go.transform.position;
+		pos[1] = y;
+		go.transform.position = pos;
+	}
+
+	void setPosX(GameObject go, float x) {
+		Vector3 pos = go.transform.position;
+		pos[0] = x;
+		go.transform.position = pos;
 	}
 
 	GameObject make(GameObject original, Vector3 position)
