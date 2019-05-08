@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c0da247f814baf07c932d5596a08cadb
+guid: c71a513b959d4427a8f0f11345080373
 ScriptedImporter:
   fileIDToRecycleName:
-    100000: gameObject/red_balloon
-    400000: gameObject/red_balloon/Transform
-    21200000: gameObject/red_balloon/SpriteRenderer
+    100000: gameObject/balloon_string
+    400000: gameObject/balloon_string/Transform
+    21200000: gameObject/balloon_string/SpriteRenderer
     21300000: sprite
     100100000: gameObject
   externalObjects: {}
@@ -51,5 +51,5 @@ ScriptedImporter:
         y: 0
         width: 0
         height: 0
-      spriteID: 2d0746f52555b9afe98c6a68c91c6df5
+      spriteID: f89d03921e34aed79807044b57471c70
     PhysicsOutlines: []
