@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 // =================================================================
@@ -15,6 +16,7 @@ public class GameController : MonoBehaviour
 	public GameObject player;
 	public GameObject balloonPrefab;
 	public GameObject cutoffMarker;
+	public Text       scoreText;
 
 	// Manage the moving backgrounds
 	private GameObject lowerBG;
@@ -62,7 +64,7 @@ public class GameController : MonoBehaviour
 		cutoffSize = backgroundHeight/2;
 	}
 
-	void LateUpdate()
+	void FixedUpdate()
 	{
 		if (playerHasFallenTooFar()) {
 			resetGame();
@@ -77,6 +79,7 @@ public class GameController : MonoBehaviour
 		updateHighestPlayerY();
 		updateCutoff();
 		autoDeleteBalloonsBelow();
+		updateScore();
 	}
 
 
@@ -235,6 +238,17 @@ public class GameController : MonoBehaviour
 		setPosY(cutoffMarker, cutoff);
 	}
 
+	
+	// =========================================================
+	// Updating the Score
+	// ---------------------------------------------------------
+
+	/// calculates and displays the score on the UI
+	void updateScore() 
+	{
+		int score = Mathf.FloorToInt(highestPlayerY);
+		scoreText.text = "Score: " + score;
+	}
 
 	// =========================================================
 	// Functions to Make Clean Code

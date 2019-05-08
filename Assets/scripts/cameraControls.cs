@@ -17,27 +17,17 @@ public class cameraControls : MonoBehaviour
 		offset = transform.position - player.transform.position;
 	}	
 
-	void FixedUpdate()
-	{
-		// slowFollow();
-	}
-
 	void LateUpdate()
 	{
 		directFollow();
 	}
 
-	void slowFollow()
-	{
-		point = player.transform.position;
-		point[1] = player.transform.position.y + offset.y;
-		dest = player.transform.position + offset;
-		transform.position = Vector3.SmoothDamp(transform.position, dest, ref vel, dampTime);
-	}
-
 	void directFollow()
 	{
-		transform.position = player.transform.position + offset;
+		Vector3 newpos = player.transform.position + offset;
+		// newpos[0] = 0;
+		transform.position = newpos;
+		
 	}
 }
 

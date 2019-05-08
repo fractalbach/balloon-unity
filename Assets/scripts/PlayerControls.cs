@@ -35,9 +35,6 @@ public class PlayerControls : MonoBehaviour
 	private int   grabCooldown    = 0;
 	private int   releaseCooldown = 0;
 
-	private GameObject leftWall; 
-	private GameObject rightWall;
-
 	// =========================================================
 	// Unity Event Handlers
 	// ---------------------------------------------------------
@@ -47,8 +44,6 @@ public class PlayerControls : MonoBehaviour
 		rb   = GetComponent<Rigidbody2D>();
 		anim = GetComponent<Animator>();
 		tr   = GetComponent<Transform>();
-		leftWall = GameObject.Find("LeftWall");
-		rightWall = GameObject.Find("RightWall");
 	}
 	
 	void Update()
@@ -64,7 +59,6 @@ public class PlayerControls : MonoBehaviour
 		cooldown();
 		// ensurePositionWithinLimits();
 		// slowdown();
-		moveWallWithPlayer();
 	}
 	
 	void OnCollisionEnter2D(Collision2D other)
@@ -225,24 +219,6 @@ public class PlayerControls : MonoBehaviour
 		}
 		if (releaseCooldown > 0) {
 			releaseCooldown--;
-		}
-	}
-
-	// =========================================================
-	// !!!   HACKS  !!!    Please  do it better :)
-	// =========================================================
-
-	void moveWallWithPlayer() 
-	{
-		if (leftWall) {
-			Vector2 pos = leftWall.transform.position;
-			pos[1] = transform.position.y;
-			leftWall.transform.position = pos;
-		}
-		if (rightWall) {
-			Vector2 pos = rightWall.transform.position;
-			pos[1] = transform.position.y;
-			rightWall.transform.position = pos;
 		}
 	}
 }
