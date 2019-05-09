@@ -7,11 +7,11 @@ using UnityEngine;
 // handles collisions for the balloon string.
 
 public class LoonString : MonoBehaviour
-{
-	private PlayerControls player;
-	
-	private const string PLAYER_NAME = "StickPlayer";
-	private const string PLAYER_TAG  = "Player";
+{	
+	const string PLAYER_NAME = "StickPlayer";
+	const string PLAYER_TAG  = "Player";
+
+	PlayerControls player;
 	
 	void Awake()
 	{
@@ -27,6 +27,7 @@ public class LoonString : MonoBehaviour
 	{
 		if (other.gameObject.tag == PLAYER_TAG) {
 			player.grabBalloon();
+			player.transform.parent = transform.parent;
 		}
 	}
 	
@@ -34,6 +35,7 @@ public class LoonString : MonoBehaviour
 	{
 		if (other.gameObject.tag == PLAYER_TAG) {
 			player.releaseBalloon();
+			player.transform.parent = null;
 		}
 	}
 }

@@ -144,8 +144,7 @@ MonoBehaviour:
   background: {fileID: 5677314549270436059, guid: 7f548b88504b1d4c6a0d80201bf2868b,
     type: 3}
   player: {fileID: 293226944}
-  balloonPrefab: {fileID: 4424694779773785262, guid: 253a0815ae4558a38a21be23b4918942,
-    type: 3}
+  balloonPrefab: {fileID: 21, guid: 253a0815ae4558a38a21be23b4918942, type: 3}
   cutoffMarker: {fileID: 564268584}
   scoreText: {fileID: 1322692703}
 --- !u!4 &244638088
@@ -630,7 +629,7 @@ Camera:
   m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
-  m_OcclusionCulling: 0
+  m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
 --- !u!4 &519420032
