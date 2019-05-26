@@ -6,15 +6,17 @@ public class cameraControls : MonoBehaviour
 {
 	public GameObject player;
 
-	private float   dampTime = 0.3f;
-	private Vector3 vel = Vector3.zero;
 	private Vector3 offset;
-	private Vector3 point;
-	private Vector3 dest;
+	private float   minSize = 11f;
 	
 	void Start()
 	{
 		offset = transform.position - player.transform.position;
+		float w = Camera.main.orthographicSize * Screen.width / Screen.height;
+		if (w < minSize) {
+			Camera.main.orthographicSize = minSize;
+		}
+		Debug.Log(w);
 	}	
 
 	void LateUpdate()
@@ -25,10 +27,10 @@ public class cameraControls : MonoBehaviour
 	void directFollow()
 	{
 		Vector3 newpos = player.transform.position + offset;
-		// newpos[0] = 0;
+		newpos[0] = 0;
 		transform.position = newpos;
-		
 	}
+
 }
 
 

@@ -11,7 +11,7 @@ public class PlayerControls : MonoBehaviour
 	private float speed         = 1f;
 	private float speedOnString = 0.5f;
 	
-	private float MAX_SPEED_X          = 15f;
+	private float MAX_SPEED_X          = 10f;
 	private float MAX_SPEED_Y          = 40f;
 	private float DEFAULT_GRAVITY      = 2f;
 	private float DEFAULT_JUMP         = 15f;
@@ -53,7 +53,7 @@ public class PlayerControls : MonoBehaviour
 	
 	void FixedUpdate()
 	{	
-		handleInput();
+		// handleInput();
 		handleMovement();
 		ensureMaximumVelocity();
 		cooldown();
@@ -101,7 +101,8 @@ public class PlayerControls : MonoBehaviour
 		if (moveX > 0.1 || moveX < -0.1) {
 			Vector2 v = new Vector2(moveX  * speed, 0);
 			rb.AddForce(v, ForceMode2D.Impulse);
-			rb.velocity = new Vector2(moveX * MAX_SPEED_X, rb.velocity.y);
+			float vx = moveX * MAX_SPEED_X;
+			rb.velocity = new Vector2(vx, rb.velocity.y);
 		}
 	}
 	

@@ -60,7 +60,7 @@ public class GameController : MonoBehaviour
 		Renderer r = background.GetComponent<Renderer>();
 		backgroundHeight = r.bounds.size[1];
 		initBalloons();
-		initBackground();
+		//initBackground();
 		cutoffSize = backgroundHeight/2;
 	}
 
@@ -70,15 +70,17 @@ public class GameController : MonoBehaviour
 			resetGame();
 			return;
 		}
-		if (readyToMoveUpScreen()) {
-			moveUpScreen();
-		}
 		if (readyToMakeNewBalloon()) {
 			makeNewBalloon();
 		}
 		updateHighestPlayerY();
 		updateCutoff();
 		autoDeleteBalloonsBelow();
+	}
+
+	void Update()
+	{
+		//if (readyToMoveUpScreen()) {moveUpScreen();}
 		updateScore();
 	}
 
@@ -93,7 +95,6 @@ public class GameController : MonoBehaviour
 		lowerBG = make(background, pos);
 		pos[1] += backgroundHeight;
 		upperBG = make(background, pos);
-		debugBackground();
 	}
 
         bool readyToMoveUpScreen()
@@ -110,7 +111,6 @@ public class GameController : MonoBehaviour
 		GameObject temp = lowerBG;
 		lowerBG = upperBG;
 		upperBG = temp;
-		debugBackground();
 	}
 
 	void debugBackground()
@@ -183,7 +183,7 @@ public class GameController : MonoBehaviour
 	{
 		Debug.Log("You have LOST! Resetting Game.");
 		resetPlayer();
-		resetBackground();
+		// resetBackground();
 		resetBalloons();
 		resetCutoff();
 	}
@@ -196,13 +196,13 @@ public class GameController : MonoBehaviour
 		player.transform.position = new Vector3(0, initialPlayerY, 0);
 	}
 
-	void resetBackground()
-	{
-		Vector3 pos = new Vector3(0f, FIRST_BACKGROUND_Y, 0f);
-		setPos(lowerBG, pos);
-		pos[1] += backgroundHeight;
-		setPos(upperBG, pos);
-	}
+	// void resetBackground()
+	// {
+	// 	Vector3 pos = new Vector3(0f, FIRST_BACKGROUND_Y, 0f);
+	// 	setPos(lowerBG, pos);
+	// 	pos[1] += backgroundHeight;
+	// 	setPos(upperBG, pos);
+	// }
 
 	void resetBalloons()
 	{
