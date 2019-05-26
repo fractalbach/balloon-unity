@@ -53,7 +53,6 @@ public class PlayerControls : MonoBehaviour
 	
 	void FixedUpdate()
 	{	
-		// handleInput();
 		handleMovement();
 		ensureMaximumVelocity();
 		cooldown();
@@ -98,12 +97,7 @@ public class PlayerControls : MonoBehaviour
 	/// moves the player when nothing extraordinary is happening
 	void handleDefaultMovement()
 	{
-		if (moveX > 0.1 || moveX < -0.1) {
-			Vector2 v = new Vector2(moveX  * speed, 0);
-			rb.AddForce(v, ForceMode2D.Impulse);
-			float vx = moveX * MAX_SPEED_X;
-			rb.velocity = new Vector2(vx, rb.velocity.y);
-		}
+		rb.velocity = new Vector2(moveX * MAX_SPEED_X, rb.velocity.y);
 	}
 	
 	/// moves the player when they are holding onto a balloon string
@@ -111,7 +105,6 @@ public class PlayerControls : MonoBehaviour
 	{
 		Vector2 v = new Vector2(moveX, moveY);
 		v *= speedOnString;
-		// rb.AddForce(v, ForceMode2D.Impulse);
 		rb.velocity = v;
 	}
 

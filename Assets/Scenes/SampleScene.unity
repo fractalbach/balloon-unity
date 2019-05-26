@@ -243,7 +243,7 @@ MonoBehaviour:
   background: {fileID: 5677314549270436059, guid: 7f548b88504b1d4c6a0d80201bf2868b,
     type: 3}
   player: {fileID: 293226944}
-  balloonPrefab: {fileID: 21, guid: 253a0815ae4558a38a21be23b4918942, type: 3}
+  balloonPrefab: {fileID: 24, guid: 253a0815ae4558a38a21be23b4918942, type: 3}
   cutoffMarker: {fileID: 564268584}
   scoreText: {fileID: 498310585}
 --- !u!4 &244638088

@@ -11,7 +11,10 @@ public class LoonString : MonoBehaviour
 	const string PLAYER_NAME = "StickPlayer";
 	const string PLAYER_TAG  = "Player";
 
+	bool neverBeenGrabbedBefore = true;
 	PlayerControls player;
+	BalloonController balloonController;
+
 	
 	void Awake()
 	{
@@ -19,15 +22,20 @@ public class LoonString : MonoBehaviour
 		player = p.GetComponent<PlayerControls>();
 	}
 
-	void OnTriggerEnter2D(Collider2D other)
+	void Start()
 	{
+		balloonController = transform.parent.parent.GetComponent<BalloonController>();
 	}
-	
+
 	void OnTriggerStay2D(Collider2D other)
 	{
 		if (other.gameObject.tag == PLAYER_TAG) {
 			player.grabBalloon();
 			player.transform.parent = transform.parent;
+			if (neverBeenGrabbedBefore) {
+				balloonController.BeginRising();
+				neverBeenGrabbedBefore = false;
+			}
 		}
 	}
 	
