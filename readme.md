@@ -1,6 +1,6 @@
 # Balloon Game
 
-**PLAY THE GAME in your browser**!
+(**PLAY THE GAME in your browser**!)[https://fractalbach.github.io/balloon-fight/]
 
 The Ballon Game is an arcade game that 
 [*desperately needs a concise description*],
@@ -27,7 +27,7 @@ Development stuff that needs to be done.
 - [x] Spawn New Balloons
 - [x] Score
 - [x] Scrolling Background
-- [ ] ballons rise after you grab them
+- [x] ballons rise after you grab them
 - [ ] It's fully playable and resembles the prototype
 
 ## Mobile
@@ -39,7 +39,7 @@ Development stuff that needs to be done.
 
 ## Graphics
 
-- [ ] background parallax scrolling
+- [x] background parallax scrolling
 - [ ] player animations
 - [ ] balloon animation
 - [ ] balloon string animation
